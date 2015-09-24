@@ -1,0 +1,243 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Abhijeet Kumar</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-09-24"><meta name="DC.source" content="q2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Abhijeet Kumar</h1><p>CSD 201302197</p><pre class="codeinput"><span class="comment">% categories of circles and number of circles in each category</span>
+<span class="comment">% q2</span>
+
+clear <span class="string">all</span>;
+clc;
+
+
+img= imread(<span class="string">'circles.jpg'</span>);
+<span class="comment">% converting image to binary</span>
+img = im2bw(img,30/255);
+<span class="comment">%remove false cicles which were created because of binarisation</span>
+img = imopen(img,strel(<span class="string">'disk'</span>,2) );
+figure , imshow(img) ; title(<span class="string">'binarised-image after false circles removal'</span>);
+
+cumulative_number_circles = [];
+img_new = {};
+start_val=3;
+end_val=12;
+
+
+<span class="comment">%part a</span>
+
+
+<span class="comment">% loop over all possible values of disc shaped strcturing element</span>
+<span class="keyword">for</span> i=start_val:end_val
+    <span class="comment">% get a structuring element</span>
+    structuring_ele = strel(<span class="string">'disk'</span>,i);
+    <span class="comment">% opening of the image with the current structuring element</span>
+    img_open = imopen(img,structuring_ele);
+    <span class="comment">% no of connected components for having a dic size greater than equal to i</span>
+    temp = bwconncomp(img_open);
+    cumulative_number_circles(i-start_val+1) = temp.NumObjects;
+    <span class="comment">%store the image for further use</span>
+    img_new(i-start_val+1) = {img_open};
+    <span class="comment">%plot the image</span>
+    figure;
+    imshow(img_open);
+    title(strcat(<span class="string">'circle with size &gt;='</span>,int2str(i)));
+<span class="keyword">end</span>
+
+
+<span class="comment">%clip the parts from there is no disc of that size or greater</span>
+[temp,idx] = min(cumulative_number_circles);
+cumulative_number_circles = cumulative_number_circles(1:idx-1);
+img_new = img_new(1:idx-1);
+
+
+<span class="comment">%part b</span>
+
+
+<span class="comment">% extract images category wise</span>
+category_img = img_new;
+<span class="keyword">for</span> i = length(cumulative_number_circles)-1:-1:1
+    category_img(i) =  {cell2mat(img_new( i )) -  cell2mat(img_new( i+1 ))};
+<span class="keyword">end</span>
+
+
+<span class="comment">%draw the figures</span>
+<span class="keyword">for</span> i=1:length(cumulative_number_circles)
+     figure;
+     imshow( imopen (cell2mat(category_img(i)) ,strel(<span class="string">'disk'</span>,2)) );
+     title(strcat(<span class="string">'disk-radius'</span>,int2str(i+start_val-1 )));
+<span class="keyword">end</span>
+
+
+
+<span class="comment">% part c</span>
+
+
+<span class="comment">%extract number of cicles in each category based on size</span>
+number_circles= cumulative_number_circles;
+<span class="keyword">for</span> i = length(cumulative_number_circles)-1:-1:1
+    number_circles(i) =  cumulative_number_circles( i ) <span class="keyword">...</span>
+                        -  cumulative_number_circles( i+1 );
+<span class="keyword">end</span>
+
+radius = start_val:1:idx+1;
+display(number_circles);
+display(radius);
+</pre><pre class="codeoutput">
+number_circles =
+
+     5    71    50    43    12    50    57    18     1
+
+
+radius =
+
+     3     4     5     6     7     8     9    10    11
+
+</pre><img vspace="5" hspace="5" src="q2_01.png" alt=""> <img vspace="5" hspace="5" src="q2_02.png" alt=""> <img vspace="5" hspace="5" src="q2_03.png" alt=""> <img vspace="5" hspace="5" src="q2_04.png" alt=""> <img vspace="5" hspace="5" src="q2_05.png" alt=""> <img vspace="5" hspace="5" src="q2_06.png" alt=""> <img vspace="5" hspace="5" src="q2_07.png" alt=""> <img vspace="5" hspace="5" src="q2_08.png" alt=""> <img vspace="5" hspace="5" src="q2_09.png" alt=""> <img vspace="5" hspace="5" src="q2_10.png" alt=""> <img vspace="5" hspace="5" src="q2_11.png" alt=""> <img vspace="5" hspace="5" src="q2_12.png" alt=""> <img vspace="5" hspace="5" src="q2_13.png" alt=""> <img vspace="5" hspace="5" src="q2_14.png" alt=""> <img vspace="5" hspace="5" src="q2_15.png" alt=""> <img vspace="5" hspace="5" src="q2_16.png" alt=""> <img vspace="5" hspace="5" src="q2_17.png" alt=""> <img vspace="5" hspace="5" src="q2_18.png" alt=""> <img vspace="5" hspace="5" src="q2_19.png" alt=""> <img vspace="5" hspace="5" src="q2_20.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Abhijeet Kumar 
+% CSD 201302197
+
+% categories of circles and number of circles in each category
+% q2
+
+clear all;
+clc;
+
+
+img= imread('circles.jpg');
+% converting image to binary
+img = im2bw(img,30/255);
+%remove false cicles which were created because of binarisation
+img = imopen(img,strel('disk',2) );
+figure , imshow(img) ; title('binarised-image after false circles removal');
+
+cumulative_number_circles = [];
+img_new = {};
+start_val=3;
+end_val=12;
+
+
+%part a
+
+
+% loop over all possible values of disc shaped strcturing element
+for i=start_val:end_val
+    % get a structuring element
+    structuring_ele = strel('disk',i);
+    % opening of the image with the current structuring element
+    img_open = imopen(img,structuring_ele);
+    % no of connected components for having a dic size greater than equal to i 
+    temp = bwconncomp(img_open);
+    cumulative_number_circles(i-start_val+1) = temp.NumObjects;
+    %store the image for further use
+    img_new(i-start_val+1) = {img_open};
+    %plot the image
+    figure;
+    imshow(img_open);
+    title(strcat('circle with size >=',int2str(i)));
+end
+
+
+%clip the parts from there is no disc of that size or greater
+[temp,idx] = min(cumulative_number_circles);
+cumulative_number_circles = cumulative_number_circles(1:idx-1);
+img_new = img_new(1:idx-1);
+
+
+%part b
+
+
+% extract images category wise
+category_img = img_new;
+for i = length(cumulative_number_circles)-1:-1:1
+    category_img(i) =  {cell2mat(img_new( i )) -  cell2mat(img_new( i+1 ))}; 
+end
+
+
+%draw the figures
+for i=1:length(cumulative_number_circles)
+     figure; 
+     imshow( imopen (cell2mat(category_img(i)) ,strel('disk',2)) );
+     title(strcat('disk-radius',int2str(i+start_val-1 )));
+end
+
+
+
+% part c
+
+
+%extract number of cicles in each category based on size 
+number_circles= cumulative_number_circles;
+for i = length(cumulative_number_circles)-1:-1:1
+    number_circles(i) =  cumulative_number_circles( i ) ...
+                        -  cumulative_number_circles( i+1 ); 
+end
+
+radius = start_val:1:idx+1;
+display(number_circles);
+display(radius);
+
+##### SOURCE END #####
+--></body></html>

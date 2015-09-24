@@ -1,0 +1,268 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Abhijeet Kumar</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-09-21"><meta name="DC.source" content="q4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Abhijeet Kumar</h1><p>CSD 201302197</p><pre class="codeinput"><span class="comment">% geometric transformation for a map</span>
+<span class="comment">% q4</span>
+
+<span class="comment">% read the given image</span>
+img = double(imread(<span class="string">'map.gif'</span>));
+img_size = size(img);
+b = img_size(2)/2;
+l = img_size(1)/2;
+
+
+
+<span class="comment">% part a</span>
+<span class="comment">% Cylindrical projection</span>
+
+<span class="comment">%center of the image to be trated as origin ...</span>
+<span class="comment">%(problem defn of latitude and longitude)</span>
+
+domain_min_l = -pi/2;
+domain_max_l = pi/2;
+domain_min_b = -1;
+domain_max_b = 1;
+step_b = ( domain_max_b - domain_min_b ) /b/2;
+step_l = ( domain_max_l - domain_min_l ) /l/2;
+
+[ x_original y_original ] = meshgrid( domain_min_b+step_b :step_b : domain_max_b<span class="keyword">...</span>
+                     , domain_min_l+step_l :step_l : domain_max_l );
+
+<span class="comment">% subscript to index for all points in the final image</span>
+range_min_l = -1;
+range_max_l = 1;
+range_min_b = -1;
+range_max_b = 1;
+step_b = ( range_max_b - range_min_b ) /b/2;
+step_l = ( range_max_l - range_min_l ) /l/2;
+[ img_new_x img_new_y ] =  meshgrid( range_min_b+step_b :step_b : range_max_b<span class="keyword">...</span>
+                     , range_min_l+step_l :step_l : range_max_l );
+
+<span class="comment">%inverse transformations on coordianates</span>
+img_old_x = img_new_x;
+img_old_y = asin( img_new_y );
+
+<span class="comment">%interpolation to calculate values at required coordinnates (these are direcly mapped to img_final points)</span>
+img_final = interp2 (x_original, y_original, img, img_old_x, img_old_y );
+
+<span class="comment">%show the images</span>
+figure;
+imshow(img);
+title(<span class="string">'original-image'</span>);
+figure;
+imshow(img_final);
+title(<span class="string">'final-image cylindrical-projection'</span>);
+
+
+
+<span class="comment">% part b</span>
+<span class="comment">% Mercartor projection</span>
+
+
+<span class="comment">%center of the image to be trated as origin ...</span>
+<span class="comment">%(problem defn of latitude and longitude)</span>
+del=0.1   ;
+domain_min_l = -pi/(2+del);
+domain_max_l = pi/(2+del);
+domain_min_b = -1;
+domain_max_b = 1;
+step_b = ( domain_max_b - domain_min_b ) /b/2;
+step_l = ( domain_max_l - domain_min_l ) /l/2;
+
+[ x_original y_original ] = meshgrid( domain_min_b+step_b :step_b : domain_max_b<span class="keyword">...</span>
+                     , domain_min_l+step_l :step_l : domain_max_l );
+
+
+
+<span class="comment">% subscript to index for all points in the final imagerange_min_l = -1;</span>
+range_min_l = log(tan(-pi/2/(2+del)+pi/4));
+range_max_l = log(tan(pi/2/(2+del)+pi/4));
+range_min_b = -1;
+range_max_b = 1;
+step_b = ( range_max_b - range_min_b ) /b/2;
+step_l = ( range_max_l - range_min_l ) /l/2;
+[ img_new_x img_new_y ] =  meshgrid( range_min_b+step_b :step_b : range_max_b<span class="keyword">...</span>
+                     , range_min_l+step_l :step_l : range_max_l );
+
+<span class="comment">%inverse transformations on coordianates</span>
+img_old_x = img_new_x;
+img_old_y = 2*(atan(exp(img_new_y))-pi/4);
+
+<span class="comment">%interpolation to calculate values at required coordinnates (these are direcly mapped to img_final points)</span>
+img_final_2 = interp2 (x_original, y_original, img, img_old_x, img_old_y );
+
+<span class="comment">%show the images</span>
+figure;
+imshow(img);
+title(<span class="string">'original_image'</span>);
+figure;
+imshow(img_final_2);
+title(<span class="string">'final-image Mercartor-projection'</span>);
+</pre><img vspace="5" hspace="5" src="q4_01.png" alt=""> <img vspace="5" hspace="5" src="q4_02.png" alt=""> <img vspace="5" hspace="5" src="q4_03.png" alt=""> <img vspace="5" hspace="5" src="q4_04.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Abhijeet Kumar 
+% CSD 201302197
+
+% geometric transformation for a map
+% q4
+
+% read the given image
+img = double(imread('map.gif'));
+img_size = size(img);
+b = img_size(2)/2;
+l = img_size(1)/2;
+
+
+
+% part a
+% Cylindrical projection
+
+%center of the image to be trated as origin ...
+%(problem defn of latitude and longitude)
+
+domain_min_l = -pi/2;
+domain_max_l = pi/2;
+domain_min_b = -1;
+domain_max_b = 1;
+step_b = ( domain_max_b - domain_min_b ) /b/2;
+step_l = ( domain_max_l - domain_min_l ) /l/2;
+
+[ x_original y_original ] = meshgrid( domain_min_b+step_b :step_b : domain_max_b...
+                     , domain_min_l+step_l :step_l : domain_max_l );
+
+% subscript to index for all points in the final image
+range_min_l = -1;
+range_max_l = 1;
+range_min_b = -1;
+range_max_b = 1;
+step_b = ( range_max_b - range_min_b ) /b/2;
+step_l = ( range_max_l - range_min_l ) /l/2;
+[ img_new_x img_new_y ] =  meshgrid( range_min_b+step_b :step_b : range_max_b...
+                     , range_min_l+step_l :step_l : range_max_l );
+
+%inverse transformations on coordianates
+img_old_x = img_new_x;
+img_old_y = asin( img_new_y );
+
+%interpolation to calculate values at required coordinnates (these are direcly mapped to img_final points)
+img_final = interp2 (x_original, y_original, img, img_old_x, img_old_y );
+
+%show the images
+figure;
+imshow(img);
+title('original-image');
+figure;
+imshow(img_final);
+title('final-image cylindrical-projection');
+
+    
+
+% part b
+% Mercartor projection
+
+
+%center of the image to be trated as origin ...
+%(problem defn of latitude and longitude)
+del=0.1   ;
+domain_min_l = -pi/(2+del);
+domain_max_l = pi/(2+del);
+domain_min_b = -1;
+domain_max_b = 1;
+step_b = ( domain_max_b - domain_min_b ) /b/2;
+step_l = ( domain_max_l - domain_min_l ) /l/2;
+
+[ x_original y_original ] = meshgrid( domain_min_b+step_b :step_b : domain_max_b...
+                     , domain_min_l+step_l :step_l : domain_max_l );
+
+
+
+% subscript to index for all points in the final imagerange_min_l = -1;
+range_min_l = log(tan(-pi/2/(2+del)+pi/4));
+range_max_l = log(tan(pi/2/(2+del)+pi/4));
+range_min_b = -1;
+range_max_b = 1;
+step_b = ( range_max_b - range_min_b ) /b/2;
+step_l = ( range_max_l - range_min_l ) /l/2;
+[ img_new_x img_new_y ] =  meshgrid( range_min_b+step_b :step_b : range_max_b...
+                     , range_min_l+step_l :step_l : range_max_l );
+
+%inverse transformations on coordianates
+img_old_x = img_new_x;
+img_old_y = 2*(atan(exp(img_new_y))-pi/4);
+
+%interpolation to calculate values at required coordinnates (these are direcly mapped to img_final points)
+img_final_2 = interp2 (x_original, y_original, img, img_old_x, img_old_y );
+
+%show the images
+figure;
+imshow(img);
+title('original_image');
+figure;
+imshow(img_final_2);
+title('final-image Mercartor-projection');
+##### SOURCE END #####
+--></body></html>
